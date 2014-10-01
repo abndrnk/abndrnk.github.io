@@ -1,13 +1,28 @@
  	<html>
+	<title>
+            Build a tree
+        </title>
 	<script src="jquery-2.1.1.min.js"></script>
     <script src="d3.min.js"></script>
+	<meta charset="utf-8">
 	<head>
-    <input type="text" id="inp_text"/>
-    <input type="button" onclick="fun()" value="Let's go!"/>
+	<div align="left">
+		    <div align="left" id="header">
+			<h3 align="left">Артём Бондаренко<br>401ПМиИ</h3>
+			Введите арифмтическое выражение <br>
+			Допустимые операнды: 'A'-'Z', 'a'-'z' <br />
+			Допустимые операции: '+', '-', '*', '/', '^' <br />
+			Допустимые разделители: '(', ')' <br>
+			Пробелы и унарные операции <strong>запрещены</strong> <br>
+			Для нового построения перезагрузите страницу
+			<br> 
+        </div>
+		</div>
+    
 	<style>
         .node circle {
-            fill: #fff;
-            stroke: #228B22;
+            fill: #DC143C;
+            stroke: #4169E1;
             stroke-width: 2px;
         }
         .node text {
@@ -15,13 +30,15 @@
         }
         .link {
             fill: none;
-            stroke: #ccc;
+            stroke: #DC143C;
             stroke-width: 2px;
         }
     </style>
 </head>
  
     <body>
+	<input type="text" id="inp_text" alt="op" size="40" autofocus=""/>
+    <input type="button" onclick="fun()" value="Пострить дерево выражения"/>
 		 <script>	
             treeData = [];		 
             function fun()
@@ -32,28 +49,38 @@
 				    alert("That's all! Bye!");
 					return 1;
 				}
+				var t;
 				for(var i=0;i<expression.length;i++) //проверка на наличие посторонних символов
 				{
-				    if(((expression[i]<'A')||(expression[i]>'z'))&&(expression[i]!='+')&&(expression[i]!='-')&&(expression[i]!='*')&&(expression[i]!='/')&&(expression[i]!='^')&&(expression[i]!='(')&&(expression[i]!=')'))
+				    t=expression[i];
+				    if(!(((t>='A')&&(t<='Z'))||((t>='a')&&(t<='z'))||(t=='+')||(t=='-')||(t=='*')||(t=='/')||(t=='^')||(t=='(')||(t==')')))
 					{
-					    alert("Vveden bred!");
+					    alert("Error! Incorrect Input!");
 						//raw_exp
 						return "Error";
 					}
 				}
 				var OPN=polish(expression);//обратная польская нотация
-				alert(OPN);
+				//alert(OPN);
 				create_tree(OPN);
 				Draw();
 			    function polish(exp)
 			    {
 				var stack=[]; //unshift и shift
 				var result=[];
+				/*alert(Number('A'));
+				alert(Number('^'));
+				alert(Number('z'));*/
 			    for(var i=0;i<exp.length;i++)
 				{
-				    if((exp[i]>='A')&&(exp[i]<='z'))
+				    //alert(i);
+					//alert(stack);
+					//alert(result);
+				    if(((exp[i]>='A')&&(exp[i]<='Z'))||((exp[i]>='a')&&(exp[i]<='z')))
 					{
 					    result.push(exp[i]);//кладем в итог
+						//alert('Кладем в итог')
+						//alert(exp[i]);
 						continue;
 					}
 					if(exp[i]=='(')
@@ -82,7 +109,7 @@
 					{
 					    while((stack[0]=='+')||(stack[0]=='-')||(stack[0]=='*')||(stack[0]=='/')||(stack[0]=='^'))
 						{
-						    if(priority(exp[i])<priority(stack[0]))
+						    if(priority(exp[i])<=priority(stack[0]))//!!
 							{
 							    result.push(stack.shift());
 							}
@@ -125,7 +152,7 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////
 			function create_tree(OPN)
 			{
-			alert(OPN);
+			//alert(OPN);
 			var stack = [];
 			for(var i = 0; i<OPN.length; i++){
 				var element = OPN[i];
@@ -145,10 +172,10 @@
 			function Draw() {
             // ************** Generate the tree diagram	 *****************
             var margin = {
-                    top: 40,
-                    right: 60,
-                    bottom: 20,
-                    left: 60
+                    top: 100,
+                    right: 100,
+                    bottom: 5,
+                    left: 100
                 },
                 width = $(window).width()*3/4 - margin.right - margin.left,
                 height = $(window).height() - margin.top - margin.bottom;
@@ -237,6 +264,8 @@
 
             }
         }
+		
 			</script>
+			
 	</body>
 </html>
